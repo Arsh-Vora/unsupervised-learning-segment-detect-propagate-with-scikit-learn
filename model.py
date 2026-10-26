@@ -139,8 +139,37 @@ def dbscan_predict(dbscan, X_new, n_neighbors: int = 50) -> np.ndarray:
     y_pred = knn.predict(X_new)
     return y_pred.astype(int)
 
-# Step 7 - fit_gmm (not yet solved)
-# TODO: implement
+# Step 7 - fit_gmm
+from sklearn.mixture import GaussianMixture
+
+def fit_gmm(X, n_components: int, random_state: int = 42) -> GaussianMixture:
+    """
+    Fit and return a scikit-learn GaussianMixture model.
+
+    Parameters:
+        X: ndarray of shape (n_samples, n_features).
+        n_components: Number of mixture components (clusters).
+        random_state: Seed for reproducible initialization.
+
+    Returns:
+        GaussianMixture: Fitted model instance.
+    """
+    gmm = GaussianMixture(n_components=n_components, n_init=10, random_state=random_state)
+    gmm.fit(X)
+    return gmm
+
+def bic_curve(X, ks) -> dict:
+    """
+    Compute the Bayesian Information Criterion (BIC) for each component count k in ks.
+
+    Parameters:
+        X: ndarray of shape (n_samples, n_features).
+        ks: Iterable of integer component counts.
+
+    Returns:
+        dict: Mapping of k -> float BIC score.
+    """
+    return {k: float(fit_gmm(X, k).bic(X)) for k in ks}
 
 # Step 8 - flag_anomalies (not yet solved)
 # TODO: implement
