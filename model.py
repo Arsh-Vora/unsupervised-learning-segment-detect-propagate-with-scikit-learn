@@ -54,8 +54,24 @@ def inertia_curve(X, ks) -> dict:
 
     return {k: float(fit_kmeans(X, k).inertia_) for k in ks}
 
-# Step 4 - silhouette_curve (not yet solved)
-# TODO: implement
+# Step 4 - silhouette_curve
+from sklearn.metrics import silhouette_score
+
+def silhouette_curve(X, ks) -> dict:
+
+    curve = {}
+    for k in ks:
+        if k < 2:
+            continue
+        model = fit_kmeans(X, k)
+        score = silhouette_score(X, model.labels_)
+        curve[k] = float(score)
+    return curve
+
+def best_k_by_silhouette(curve: dict) -> int:
+
+    # Key function: maximize score, minimize k on ties
+    return max(curve.keys(), key=lambda k: (curve[k], -k))
 
 # Step 5 - fit_dbscan (not yet solved)
 # TODO: implement
