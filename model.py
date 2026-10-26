@@ -222,8 +222,15 @@ def representative_digits(X_train, k: int = 50, random_state: int = 42):
 
     return kmeans, rep_idx
 
-# Step 12 - train_on_representatives (not yet solved)
-# TODO: implement
+# Step 12 - train_on_representatives
+from sklearn.linear_model import LogisticRegression
+
+def train_on_representatives(X_train, y_train, rep_idx, X_test, y_test) -> float:
+
+    log_reg = LogisticRegression(max_iter=10000)
+    log_reg.fit(X_train[rep_idx], y_train[rep_idx])
+    
+    return float(log_reg.score(X_test, y_test))
 
 # Step 13 - propagate_and_train (not yet solved)
 # TODO: implement
