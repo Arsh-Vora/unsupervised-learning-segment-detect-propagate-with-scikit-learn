@@ -232,8 +232,31 @@ def train_on_representatives(X_train, y_train, rep_idx, X_test, y_test) -> float
     
     return float(log_reg.score(X_test, y_test))
 
-# Step 13 - propagate_and_train (not yet solved)
-# TODO: implement
+# Step 13 - propagate_and_train
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+
+def propagate_and_train(X_train, y_train, kmeans, rep_idx, X_test, y_test, percentile=20):
+    X_dist = kmeans.transform(X_train)
+    y_prop = np.empty_like(y_train)
+    mask = np.zeros(len(X_train), dtype=bool)
+
+    for j in range(kmeans.n_clusters):
+        in_cluster = (kmeans.labels_ == j)
+        dists = X_dist[in_cluster, j]
+        
+        keep = in_cluster & (X_dist[:, j] <= np.percentile(dists, percentile))
+        mask |= keep
+        y_prop[keep] = y_train[rep_idx[j]]
+
+    # Train on kept subset
+    clf = LogisticRegression(max_iter=10000).fit(X_train[mask], y_prop[mask])
+
+    return {
+        "n_propagated": int(mask.sum()),
+        "label_accuracy": float((y_prop[mask] == y_train[mask]).mean()),
+        "test_accuracy": float(clf.score(X_test, y_test)),
+    }
 
 # Step 14 - synthetic_image (not yet solved)
 # TODO: implement
