@@ -171,11 +171,33 @@ def bic_curve(X, ks) -> dict:
     """
     return {k: float(fit_gmm(X, k).bic(X)) for k in ks}
 
-# Step 8 - flag_anomalies (not yet solved)
-# TODO: implement
+# Step 8 - flag_anomalies
+import numpy as np
 
-# Step 9 - digits_data (not yet solved)
-# TODO: implement
+def flag_anomalies(gmm, X, contamination: float = 0.04) -> np.ndarray:
+
+    densities = gmm.score_samples(X)
+    threshold = np.percentile(densities, 100 * contamination)
+    return densities < threshold
+
+# Step 9 - digits_data
+from sklearn.datasets import load_digits
+from sklearn.model_selection import train_test_split
+
+def digits_data(test_size: float = 0.25, random_state: int = 42):
+
+    digits = load_digits()
+    X, y = digits.data, digits.target
+    
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=test_size,
+        random_state=random_state,
+        stratify=y
+    )
+    
+    return X_train, X_test, y_train, y_test
 
 # Step 10 - baseline_50_random (not yet solved)
 # TODO: implement
