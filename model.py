@@ -73,8 +73,56 @@ def best_k_by_silhouette(curve: dict) -> int:
     # Key function: maximize score, minimize k on ties
     return max(curve.keys(), key=lambda k: (curve[k], -k))
 
-# Step 5 - fit_dbscan (not yet solved)
-# TODO: implement
+# Step 5 - fit_dbscan
+import numpy as np
+from sklearn.cluster import DBSCAN
+
+def fit_dbscan(X, eps: float = 0.2, min_samples: int = 5) -> DBSCAN:
+    """
+    Fit and return a scikit-learn DBSCAN clustering model.
+
+    Parameters:
+        X: ndarray of shape (n_samples, n_features).
+        eps: Maximum distance between two samples for one to be considered in the neighborhood of the other.
+        min_samples: Number of samples in a neighborhood for a point to be considered a core point.
+
+    Returns:
+        dbscan: Fitted DBSCAN estimator instance.
+    """
+    dbscan = DBSCAN(eps=eps, min_samples=min_samples)
+    dbscan.fit(X)
+    return dbscan
+
+def dbscan_summary(dbscan: DBSCAN) -> dict:
+    """
+    Extract clustering statistics from a fitted DBSCAN instance.
+
+    Parameters:
+        dbscan: Fitted DBSCAN model.
+
+    Returns:
+        dict with:
+            - 'n_clusters': Number of distinct clusters formed (excluding -1).
+            - 'n_noise': Total points classified as noise (labeled -1).
+            - 'n_core': Total number of identified core points.
+    """
+    labels = dbscan.labels_
+    
+    # Distinct cluster labels excluding noise (-1)
+    unique_labels = set(labels)
+    n_clusters = len(unique_labels - {-1})
+    
+    # Total noise points
+    n_noise = int(np.sum(labels == -1))
+    
+    # Core sample count from fitted attribute indices
+    n_core = int(len(dbscan.core_sample_indices_))
+
+    return {
+        "n_clusters": int(n_clusters),
+        "n_noise": n_noise,
+        "n_core": n_core
+    }
 
 # Step 6 - dbscan_predict (not yet solved)
 # TODO: implement
