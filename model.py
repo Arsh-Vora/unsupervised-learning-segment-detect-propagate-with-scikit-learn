@@ -258,8 +258,26 @@ def propagate_and_train(X_train, y_train, kmeans, rep_idx, X_test, y_test, perce
         "test_accuracy": float(clf.score(X_test, y_test)),
     }
 
-# Step 14 - synthetic_image (not yet solved)
-# TODO: implement
+# Step 14 - synthetic_image
+import numpy as np
+
+def synthetic_image(size: int = 48) -> np.ndarray:
+    img = np.zeros((size, size, 3), dtype=np.float64)
+    half = size // 2
+    g = np.linspace(0, 1, half)
+
+    img[:, :half, 0] = 1.0
+    img[:, :half, 1] = g
+    img[:, :half, 2] = 0.0
+
+    img[:, half:, 0] = 0.0
+    img[:, half:, 1] = g
+    img[:, half:, 2] = 1.0
+
+    sq = size // 4
+    img[:sq, :sq] = 1.0
+
+    return img
 
 # Step 15 - segment_colors (not yet solved)
 # TODO: implement
