@@ -293,8 +293,14 @@ def segment_colors(image: np.ndarray, k: int = 4, random_state: int = 42) -> np.
 
     return quantized_pixels.reshape(h, w, c)
 
-# Step 16 - save_and_reload_clusterer (not yet solved)
-# TODO: implement
+# Step 16 - save_and_reload_clusterer
+import joblib
+
+def save_and_reload_clusterer(kmeans, rep_labels, path: str) -> dict:
+
+    joblib.dump({"kmeans": kmeans, "rep_labels": rep_labels}, path)
+    loaded = joblib.load(path)
+    return loaded
 
 # Step 17 - predict_digit_labels (not yet solved)
 # TODO: implement
