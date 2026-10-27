@@ -279,8 +279,19 @@ def synthetic_image(size: int = 48) -> np.ndarray:
 
     return img
 
-# Step 15 - segment_colors (not yet solved)
-# TODO: implement
+# Step 15 - segment_colors
+import numpy as np
+
+def segment_colors(image: np.ndarray, k: int = 4, random_state: int = 42) -> np.ndarray:
+
+    h, w, c = image.shape
+    pixels = image.reshape(-1, c)
+
+    kmeans = fit_kmeans(pixels, k=k, random_state=random_state)
+
+    quantized_pixels = kmeans.cluster_centers_[kmeans.labels_]
+
+    return quantized_pixels.reshape(h, w, c)
 
 # Step 16 - save_and_reload_clusterer (not yet solved)
 # TODO: implement
